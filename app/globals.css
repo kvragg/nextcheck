@@ -3,12 +3,83 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
+  --background: 9 9 11;
+  --foreground: 250 250 250;
+  --muted: 161 161 170;
+  --border: 39 39 42;
+  --card: 24 24 27;
+  --pass: 16 185 129;
+  --warn: 245 158 11;
+  --fail: 239 68 68;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html, body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(var(--pass), 0.3);
+  color: rgb(var(--foreground));
+}
+
+input::placeholder {
+  color: rgb(var(--muted));
+}
+
+/* Subtle grid background */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Score gradient bar */
+.score-bar {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--fail)) 0%,
+    rgb(var(--warn)) 50%,
+    rgb(var(--pass)) 100%
+  );
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--background));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--muted));
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgb(var(--card)) 0%,
+    rgb(var(--border)) 50%,
+    rgb(var(--card)) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }

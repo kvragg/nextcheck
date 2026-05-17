@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-
-type CheckResult = {
-  id: string;
-  name: string;
-  status: "PASS" | "WARN" | "FAIL";
-  message: string;
-};
+import { Loader2, Download, ArrowRight } from "lucide-react";
+import { Hero } from "@/components/Hero";
+import { ScoreCard } from "@/components/ScoreCard";
+import { CheckRow } from "@/components/CheckRow";
+import { Footer } from "@/components/Footer";
+import { computeScore } from "@/lib/score";
+import type { CheckResult } from "@/lib/checks/types";
 
 type AuditResponse = {
   owner: string;
@@ -62,99 +62,83 @@ export default function HomePage() {
     URL.revokeObjectURL(a.href);
   }
 
-  const passCount = audit?.results.filter((r) => r.status === "PASS").length ?? 0;
-  const warnCount = audit?.results.filter((r) => r.status === "WARN").length ?? 0;
-  const failCount = audit?.results.filter((r) => r.status === "FAIL").length ?? 0;
+  const score = audit ? computeScore(audit.results) : null;
+  const repoLabel = audit ? `${audit.owner}/${audit.repo}` : "";
 
   return (
-    <main className="min-h-screen flex flex-col items-center p-8">
-      <div className="w-full max-w-2xl mt-12">
-        <h1 className="text-4xl font-bold mb-2">nextcheck</h1>
-        <p className="text-zinc-400 mb-8">
-          Paste a public GitHub URL of a Next.js repo. Get 10 security checks + PDF report.
-        </p>
+    <div className="min-h-screen bg-grid">
+      <main className="max-w-2xl mx-auto px-6 py-16">
+        <Hero />
 
-        <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
+        <form onSubmit={handleSubmit} className="flex gap-2 mb-12">
           <input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://github.com/owner/repo"
             required
-            className="flex-1 px-4 py-3 rounded bg-zinc-900 border border-zinc-800 focus:border-zinc-600 outline-none"
+            disabled={loading}
+            className="flex-1 px-4 py-3 rounded border border-border bg-card focus:border-pass focus:outline-none focus:ring-2 focus:ring-pass/20 transition-colors disabled:opacity-50 font-mono text-sm"
+            aria-label="GitHub repository URL"
           />
           <button
             type="submit"
-            disabled={loading}
-            className="px-6 py-3 rounded bg-white text-black font-medium disabled:opacity-50"
+            disabled={loading || !url}
+            className="px-5 py-3 rounded bg-foreground text-background font-medium hover:bg-foreground/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2"
           >
-            {loading ? "Auditing..." : "Audit"}
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Auditing
+              </>
+            ) : (
+              <>
+                Audit <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
+        {loading && (
+          <div className="space-y-2 animate-fade-in">
+            <div className="h-32 rounded border border-border shimmer" />
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="h-16 rounded border border-border shimmer" />
+            ))}
+          </div>
+        )}
+
         {error && (
-          <div className="p-4 rounded bg-red-900/30 border border-red-800 text-red-200 mb-4">
+          <div className="p-4 rounded border border-fail/30 bg-fail/10 text-fail text-sm animate-fade-in">
             {error}
           </div>
         )}
 
-        {audit && (
+        {audit && score && (
           <>
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex gap-4 text-sm">
-                <span className="text-pass">{passCount} PASS</span>
-                <span className="text-warn">{warnCount} WARN</span>
-                <span className="text-fail">{failCount} FAIL</span>
+            <ScoreCard score={score} repo={repoLabel} />
+
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-xs text-muted font-mono uppercase tracking-wider">
+                Findings
               </div>
               <button
                 onClick={downloadPdf}
-                className="px-4 py-2 rounded border border-zinc-700 hover:bg-zinc-900 text-sm"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-border hover:bg-card text-xs transition-colors"
               >
-                Download PDF
+                <Download className="w-3.5 h-3.5" /> Download PDF
               </button>
             </div>
 
             <div className="space-y-2">
-              {audit.results.map((r) => (
-                <div
-                  key={r.id}
-                  className="p-4 rounded border border-zinc-800 flex items-start gap-3"
-                >
-                  <span
-                    className={`w-16 font-medium ${
-                      r.status === "PASS"
-                        ? "text-pass"
-                        : r.status === "WARN"
-                        ? "text-warn"
-                        : "text-fail"
-                    }`}
-                  >
-                    {r.status}
-                  </span>
-                  <div className="flex-1">
-                    <div className="font-medium">{r.name}</div>
-                    <div className="text-sm text-zinc-400 mt-1">{r.message}</div>
-                  </div>
-                </div>
+              {audit.results.map((r, i) => (
+                <CheckRow key={r.id} check={r} index={i} />
               ))}
             </div>
           </>
         )}
 
-        <footer className="mt-16 pt-8 border-t border-zinc-800 text-sm text-zinc-500">
-          <p>
-            Built by{" "}
-            <a
-              href="https://www.upwork.com/freelancers/~"
-              className="underline hover:text-zinc-300"
-            >
-              Paul Costa
-            </a>{" "}
-            · Next.js + Supabase + AI Builder · Available for security audits and
-            fintech SaaS work.
-          </p>
-        </footer>
-      </div>
-    </main>
+        <Footer />
+      </main>
+    </div>
   );
 }
