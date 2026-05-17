@@ -9,32 +9,32 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "rgb(var(--background) / <alpha-value>)",
-        foreground: "rgb(var(--foreground) / <alpha-value>)",
-        muted: "rgb(var(--muted) / <alpha-value>)",
-        border: "rgb(var(--border) / <alpha-value>)",
-        card: "rgb(var(--card) / <alpha-value>)",
-        pass: "rgb(var(--pass) / <alpha-value>)",
-        warn: "rgb(var(--warn) / <alpha-value>)",
-        fail: "rgb(var(--fail) / <alpha-value>)",
+        bg: "var(--bg)",
+        "bg-2": "var(--bg-2)",
+        ink: "var(--ink)",
+        "ink-2": "var(--ink-2)",
+        muted: "var(--muted)",
+        line: "var(--line)",
+        "line-strong": "var(--line-strong)",
+        card: "var(--card)",
+        green: "var(--green)",
+        "green-deep": "var(--green-deep)",
+        gold: "var(--gold)",
+        warn: "var(--warn)",
+        fail: "var(--fail)",
+        pass: "var(--green)",
       },
       fontFamily: {
         sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
+      fontSize: {
+        display: ["clamp(48px, 7.2vw, 120px)", { lineHeight: "0.94", letterSpacing: "-0.04em" }],
+        h2: ["clamp(32px, 4vw, 56px)", { lineHeight: "1.05", letterSpacing: "-0.025em" }],
       },
       animation: {
-        "fade-in": "fade-in 0.4s ease-out",
-        "slide-up": "slide-up 0.4s ease-out",
-      },
-      keyframes: {
-        "fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
-        "slide-up": {
-          "0%": { opacity: "0", transform: "translateY(8px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
+        "hero-pan": "hero-pan 22s ease-in-out infinite alternate",
+        "pulse-dot": "pulse-dot 1.8s ease-in-out infinite",
       },
     },
   },
