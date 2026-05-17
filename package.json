@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@octokit/rest": "^21.1.0",
+    "@octokit/rest": "^22.0.1",
     "@react-pdf/renderer": "^4.1.6",
     "@supabase/supabase-js": "^2.47.10",
     "framer-motion": "^12.38.0",
