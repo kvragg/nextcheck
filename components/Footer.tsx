@@ -4,9 +4,9 @@ import { GitHubIcon } from "./icons";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line py-12 mt-12">
+    <footer className="border-t border-line py-10 sm:py-12 mt-12">
       <Container>
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 sm:gap-8">
           <div className="space-y-1.5">
             <div className="text-ink font-medium">
               Built by Paul Costa, 100% via AI orchestration.

@@ -23,6 +23,11 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
   background: var(--bg);
   color: var(--ink);
@@ -30,10 +35,31 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   font-feature-settings: "ss01", "cv11";
+  min-width: 320px;
+}
+
+/* Touch targets >= 44px on mobile (WCAG AAA) */
+@media (hover: none) and (pointer: coarse) {
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+  /* Exceptions: small inline links inside text */
+  p a, footer a {
+    min-height: auto;
+  }
+}
+
+/* TV / very large screens (1920+) */
+@media (min-width: 1920px) {
+  html { font-size: 17px; }
+}
+@media (min-width: 2560px) {
+  html { font-size: 18px; }
 }
 
 ::selection {

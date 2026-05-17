@@ -66,9 +66,9 @@ export function AuditSection() {
   const repoLabel = audit ? `${audit.owner}/${audit.repo}` : "";
 
   return (
-    <section id="audit" className="py-32 border-t border-line">
+    <section id="audit" className="py-20 sm:py-24 lg:py-32 border-t border-line scroll-mt-20">
       <Container>
-        <div className="reveal max-w-2xl mb-12">
+        <div className="reveal max-w-2xl mb-8 sm:mb-12">
           <Eyebrow>Audit</Eyebrow>
           <h2 className="text-h2 font-medium mt-3 text-balance">
             Run a real audit now.
@@ -77,7 +77,7 @@ export function AuditSection() {
         </div>
 
         <div className="reveal reveal-d1 max-w-2xl">
-          <form onSubmit={handleSubmit} className="flex gap-2 mb-10">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-8 sm:mb-10">
             <input
               type="url"
               value={url}
@@ -85,13 +85,13 @@ export function AuditSection() {
               placeholder="https://github.com/owner/repo"
               required
               disabled={loading}
-              className="flex-1 px-4 py-3.5 rounded-md border border-line-strong bg-card focus:border-green focus:outline-none focus:ring-2 focus:ring-green/20 transition-colors disabled:opacity-50 font-mono text-sm"
+              className="flex-1 min-w-0 px-4 py-3.5 rounded-md border border-line-strong bg-card focus:border-green focus:outline-none focus:ring-2 focus:ring-green/20 transition-colors disabled:opacity-50 font-mono text-sm"
               aria-label="GitHub repository URL"
             />
             <button
               type="submit"
               disabled={loading || !url}
-              className="px-5 py-3.5 rounded-md bg-ink text-bg font-medium hover:bg-ink/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center gap-2 shrink-0"
+              className="px-5 py-3.5 rounded-md bg-ink text-bg font-medium hover:bg-ink/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shrink-0"
             >
               {loading ? (
                 <>

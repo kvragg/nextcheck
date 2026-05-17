@@ -8,7 +8,7 @@ export function Hero() {
   useReveal();
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-center pt-32 pb-24 overflow-hidden">
+    <section className="relative min-h-[88vh] lg:min-h-screen flex flex-col justify-center pt-20 sm:pt-24 lg:pt-32 pb-16 sm:pb-20 lg:pb-24 overflow-hidden">
       {/* Background gradient + animated pan */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div
@@ -61,20 +61,20 @@ export function Hero() {
 
       <Container className="relative z-[2]">
         {/* Eyebrow strip */}
-        <div className="reveal flex items-center gap-4 mb-10 sm:mb-14">
-          <Eyebrow>Security audit · Next.js + Supabase</Eyebrow>
+        <div className="reveal flex items-center gap-3 sm:gap-4 mb-8 sm:mb-12 lg:mb-14">
+          <Eyebrow>Security · Next.js + Supabase</Eyebrow>
           <div className="flex-1 h-px bg-line" />
-          <span className="mono text-[10.5px] uppercase tracking-[0.14em] text-muted hidden sm:inline">
+          <span className="mono text-[10px] sm:text-[10.5px] uppercase tracking-[0.14em] text-muted hidden sm:inline">
             v0.3 · open source · MIT
           </span>
         </div>
 
         {/* Hero grid: copy + mock */}
-        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-16 lg:gap-20 items-center">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 sm:gap-14 lg:gap-16 xl:gap-20 items-center">
           {/* Left: copy */}
-          <div>
+          <div className="max-w-2xl lg:max-w-none">
             <h1
-              className="reveal text-display font-medium text-balance mb-7"
+              className="reveal text-display font-medium text-balance mb-5 sm:mb-7"
               style={{ textShadow: "0 2px 40px rgba(0,0,0,0.5)" }}
             >
               Audit your Next.js
@@ -96,31 +96,31 @@ export function Hero() {
               </span>
             </h1>
 
-            <p className="reveal reveal-d1 text-lg leading-relaxed text-ink-2 max-w-xl">
+            <p className="reveal reveal-d1 text-base sm:text-lg leading-relaxed text-ink-2 max-w-xl">
               Ten production-grade security checks. A 0&ndash;100 score. A
               downloadable PDF. In under 30 seconds &mdash; from someone who&apos;s
               watched these fail from inside the bank.
             </p>
 
-            <div className="reveal reveal-d2 flex flex-wrap gap-3 mt-10">
+            <div className="reveal reveal-d2 flex flex-col sm:flex-row gap-3 mt-8 sm:mt-10">
               <MagneticHover strength={10}>
                 <a
                   href="#audit"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-md bg-green text-bg font-medium hover:bg-green/90 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-md bg-green text-bg font-medium hover:bg-green/90 transition-colors w-full sm:w-auto"
                 >
                   Start audit <ArrowRight className="w-4 h-4" />
                 </a>
               </MagneticHover>
               <a
                 href="#how"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-md border border-line-strong hover:bg-card transition-colors text-ink-2"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-md border border-line-strong hover:bg-card transition-colors text-ink-2 w-full sm:w-auto"
               >
                 <ArrowDown className="w-4 h-4" /> How it works
               </a>
             </div>
 
             {/* Trust strip */}
-            <div className="reveal reveal-d3 mt-14 pt-7 border-t border-line grid grid-cols-2 sm:grid-cols-4 gap-5">
+            <div className="reveal reveal-d3 mt-12 sm:mt-14 pt-6 sm:pt-7 border-t border-line grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-4">
               <TrustStat k="Checks" v="10" />
               <TrustStat k="Runtime" v="~30s" />
               <TrustStat k="Output" v="PDF + JSON" />
@@ -128,8 +128,8 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right: animated mock */}
-          <div className="reveal reveal-d2 relative">
+          {/* Right: animated mock — hidden on mobile (too cramped), shown md+ */}
+          <div className="reveal reveal-d2 relative hidden md:block">
             <AuditPreview />
             <div
               className="mono absolute -top-3 -right-2 px-3.5 py-2 rounded-full bg-bg/90 text-gold border text-[10.5px] tracking-[0.12em] uppercase flex items-center gap-2"
@@ -147,8 +147,8 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="reveal reveal-d4 absolute left-1/2 -translate-x-1/2 bottom-2 flex flex-col items-center gap-2 text-muted">
+        {/* Scroll indicator — hidden on mobile, shown lg+ */}
+        <div className="reveal reveal-d4 absolute left-1/2 -translate-x-1/2 bottom-2 hidden lg:flex flex-col items-center gap-2 text-muted">
           <div className="mono text-[10px] tracking-[0.2em] uppercase">scroll</div>
           <div className="w-px h-9 bg-gradient-to-b from-muted to-transparent" />
         </div>
@@ -160,10 +160,10 @@ export function Hero() {
 function TrustStat({ k, v }: { k: string; v: string }) {
   return (
     <div>
-      <div className="mono text-[10px] tracking-[0.18em] uppercase text-muted mb-2">
+      <div className="mono text-[10px] tracking-[0.18em] uppercase text-muted mb-1.5 sm:mb-2">
         {k}
       </div>
-      <div className="text-sm font-medium text-ink">{v}</div>
+      <div className="text-sm sm:text-base font-medium text-ink">{v}</div>
     </div>
   );
 }
