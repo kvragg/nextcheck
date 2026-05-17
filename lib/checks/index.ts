@@ -1,4 +1,4 @@
-import { getOctokit, safeGetContent, pathExists } from "@/lib/octokit";
+import { getOctokit, safeGetContent, pathExists, listFilesByExtension, countMatchesInFiles } from "@/lib/octokit";
 import type { Check, CheckContext, CheckResult } from "./types";
 
 export const checks: Check[] = [
@@ -42,21 +42,15 @@ export const checks: Check[] = [
   },
   {
     id: "no-console-prod",
-    name: "console.log in app/ or pages/",
+    name: "console.log in app/",
     async run({ owner, repo }) {
       const octo = getOctokit();
-      try {
-        const res = await octo.search.code({
-          q: `"console.log" repo:${owner}/${repo} path:app extension:ts extension:tsx`,
-          per_page: 5,
-        });
-        const count = res.data.total_count;
-        if (count === 0) return pass("no-console-prod", "console.log in app/", "No console.log found in app/ TS files");
-        if (count <= 3) return warn("no-console-prod", "console.log in app/", `Found ${count} console.log occurrences in app/ — review before prod`);
-        return fail("no-console-prod", "console.log in app/", `Found ${count}+ console.log occurrences in app/ — strip before prod`);
-      } catch (err) {
-        return warn("no-console-prod", "console.log in app/", `Search API failed (${(err as Error).message}). Manual: grep -r 'console.log' app/`);
-      }
+      const files = await listFilesByExtension(octo, owner, repo, "app/", [".ts", ".tsx"]);
+      if (files.length === 0) return warn("no-console-prod", "console.log in app/", "No app/ TS files found (Pages Router? folder missing?)");
+      const { scanned, totalMatches } = await countMatchesInFiles(octo, owner, repo, files, /console\.log\s*\(/g, 25);
+      if (totalMatches === 0) return pass("no-console-prod", "console.log in app/", `Scanned ${scanned} files — no console.log found`);
+      if (totalMatches <= 3) return warn("no-console-prod", "console.log in app/", `Found ${totalMatches} console.log in ${scanned} files — review before prod`);
+      return fail("no-console-prod", "console.log in app/", `Found ${totalMatches}+ console.log in ${scanned} files — strip before prod`);
     },
   },
   {
@@ -64,17 +58,11 @@ export const checks: Check[] = [
     name: "dangerouslySetInnerHTML usage",
     async run({ owner, repo }) {
       const octo = getOctokit();
-      try {
-        const res = await octo.search.code({
-          q: `"dangerouslySetInnerHTML" repo:${owner}/${repo} extension:tsx extension:jsx`,
-          per_page: 5,
-        });
-        const count = res.data.total_count;
-        if (count === 0) return pass("no-dangerous-html", "dangerouslySetInnerHTML", "No dangerouslySetInnerHTML usage detected");
-        return warn("no-dangerous-html", "dangerouslySetInnerHTML", `Found ${count} usage(s) — ensure each input is sanitized (DOMPurify or equivalent)`);
-      } catch (err) {
-        return warn("no-dangerous-html", "dangerouslySetInnerHTML", `Search API failed (${(err as Error).message}). Manual review recommended.`);
-      }
+      const files = await listFilesByExtension(octo, owner, repo, "", [".tsx", ".jsx"]);
+      if (files.length === 0) return warn("no-dangerous-html", "dangerouslySetInnerHTML", "No .tsx/.jsx files found in repo");
+      const { scanned, totalMatches } = await countMatchesInFiles(octo, owner, repo, files, /dangerouslySetInnerHTML/g, 30);
+      if (totalMatches === 0) return pass("no-dangerous-html", "dangerouslySetInnerHTML", `Scanned ${scanned} component files — no dangerouslySetInnerHTML usage`);
+      return warn("no-dangerous-html", "dangerouslySetInnerHTML", `Found ${totalMatches} usage(s) across ${scanned} files — ensure each input is sanitized (DOMPurify or equivalent)`);
     },
   },
 

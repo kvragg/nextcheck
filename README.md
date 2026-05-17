@@ -1,5 +1,7 @@
 # nextcheck
 
+**Live: https://nextcheck-six.vercel.app**
+
 Security audit tool for public Next.js GitHub repos. Paste a URL, get 10 checks + a PDF report.
 
 ## What it checks
