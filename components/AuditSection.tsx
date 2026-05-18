@@ -5,7 +5,7 @@ import { Loader2, Download, ArrowRight } from "lucide-react";
 import { Container, Eyebrow, useReveal } from "./primitives";
 import { ScoreCard } from "./ScoreCard";
 import { CheckRow } from "./CheckRow";
-import { computeScore } from "@/lib/score";
+import { computeScore, scoreColor } from "@/lib/score";
 import type { CheckResult } from "@/lib/checks/types";
 
 type AuditResponse = {
@@ -72,11 +72,11 @@ export function AuditSection() {
           <Eyebrow>Audit</Eyebrow>
           <h2 className="text-h2 font-medium mt-3 text-balance">
             Run a real audit now.
-            <span className="text-muted"> Live, no sign-up, free.</span>
+            <span className="text-muted"> 30 checks, ~30 seconds, no sign-up.</span>
           </h2>
         </div>
 
-        <div className="reveal reveal-d1 max-w-2xl">
+        <div className="reveal reveal-d1 max-w-3xl">
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-8 sm:mb-10">
             <input
               type="url"
@@ -108,7 +108,7 @@ export function AuditSection() {
           {loading && (
             <div className="space-y-2 animate-fade-up">
               <div className="h-32 rounded-md border border-line shimmer" />
-              {Array.from({ length: 5 }).map((_, i) => (
+              {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="h-16 rounded-md border border-line shimmer" />
               ))}
             </div>
@@ -126,7 +126,7 @@ export function AuditSection() {
 
               <div className="flex items-center justify-between mb-4">
                 <div className="mono text-[10.5px] text-muted uppercase tracking-[0.18em]">
-                  Findings
+                  Findings · {audit.results.length} checks
                 </div>
                 <button
                   onClick={downloadPdf}
@@ -136,9 +136,21 @@ export function AuditSection() {
                 </button>
               </div>
 
-              <div className="space-y-2">
-                {audit.results.map((r, i) => (
-                  <CheckRow key={r.id} check={r} index={i} />
+              <div className="space-y-6">
+                {score.byCategory.map((cat) => (
+                  <div key={cat.category}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-base font-medium">{cat.category}</h3>
+                      <span className={`mono text-xs tabular-nums ${scoreColor(cat.score)}`}>
+                        {cat.score}/100 · {cat.results.length} check{cat.results.length !== 1 && "s"}
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      {cat.results.map((r, i) => (
+                        <CheckRow key={r.id} check={r} index={i} />
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>

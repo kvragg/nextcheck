@@ -1,9 +1,11 @@
 import { Octokit } from "@octokit/rest";
 
+let _cachedTree: { key: string; files: string[] } | null = null;
+
 export function getOctokit() {
   return new Octokit({
     auth: process.env.GITHUB_TOKEN,
-    userAgent: "nextcheck/0.1",
+    userAgent: "nextcheck/0.4",
   });
 }
 
@@ -37,29 +39,45 @@ export async function pathExists(
   }
 }
 
-export async function listFilesByExtension(
+/**
+ * Get the entire file tree of the default branch once and cache it
+ * per request. Avoids hammering the API for the 20+ checks that need it.
+ */
+export async function getFileTree(
   octokit: Octokit,
   owner: string,
-  repo: string,
-  pathPrefix: string,
-  extensions: string[]
+  repo: string
 ): Promise<string[]> {
+  const key = `${owner}/${repo}`;
+  if (_cachedTree && _cachedTree.key === key) return _cachedTree.files;
+
   try {
-    const repoInfo = await octokit.repos.get({ owner, repo });
-    const defaultBranch = repoInfo.data.default_branch;
+    const info = await octokit.repos.get({ owner, repo });
+    const defaultBranch = info.data.default_branch;
     const tree = await octokit.git.getTree({
       owner,
       repo,
       tree_sha: defaultBranch,
       recursive: "true",
     });
-    return tree.data.tree
-      .filter((node) => node.type === "blob" && node.path)
-      .map((node) => node.path as string)
-      .filter((p) => p.startsWith(pathPrefix) && extensions.some((ext) => p.endsWith(ext)));
+    const files = tree.data.tree
+      .filter((n) => n.type === "blob" && n.path)
+      .map((n) => n.path as string);
+    _cachedTree = { key, files };
+    return files;
   } catch {
     return [];
   }
+}
+
+export function filesByExt(
+  files: string[],
+  pathPrefix: string,
+  exts: string[]
+): string[] {
+  return files.filter(
+    (p) => p.startsWith(pathPrefix) && exts.some((e) => p.endsWith(e))
+  );
 }
 
 export async function countMatchesInFiles(
@@ -68,16 +86,37 @@ export async function countMatchesInFiles(
   repo: string,
   files: string[],
   pattern: RegExp,
-  maxFiles: number = 20
-): Promise<{ scanned: number; totalMatches: number }> {
+  maxFiles: number = 25
+): Promise<{ scanned: number; totalMatches: number; sampleFile?: string }> {
   let scanned = 0;
   let totalMatches = 0;
+  let sampleFile: string | undefined;
   for (const file of files.slice(0, maxFiles)) {
     const content = await safeGetContent(octokit, owner, repo, file);
     if (content === null) continue;
     scanned++;
     const matches = content.match(pattern);
-    if (matches) totalMatches += matches.length;
+    if (matches) {
+      totalMatches += matches.length;
+      if (!sampleFile) sampleFile = file;
+    }
   }
-  return { scanned, totalMatches };
+  return { scanned, totalMatches, sampleFile };
+}
+
+export async function readAnyOf(
+  octokit: Octokit,
+  owner: string,
+  repo: string,
+  paths: string[]
+): Promise<{ path: string; content: string } | null> {
+  for (const p of paths) {
+    const content = await safeGetContent(octokit, owner, repo, p);
+    if (content !== null) return { path: p, content };
+  }
+  return null;
+}
+
+export function clearTreeCache() {
+  _cachedTree = null;
 }

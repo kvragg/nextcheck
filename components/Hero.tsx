@@ -62,7 +62,7 @@ export function Hero() {
       <Container className="relative z-[2]">
         {/* Eyebrow strip */}
         <div className="reveal flex items-center gap-3 sm:gap-4 mb-8 sm:mb-12 lg:mb-14">
-          <Eyebrow>Security · Next.js + Supabase</Eyebrow>
+          <Eyebrow>Security · Next.js + Supabase · 30 deep checks</Eyebrow>
           <div className="flex-1 h-px bg-line" />
           <span className="mono text-[10px] sm:text-[10.5px] uppercase tracking-[0.14em] text-muted hidden sm:inline">
             v0.3 · open source · MIT
@@ -97,9 +97,10 @@ export function Hero() {
             </h1>
 
             <p className="reveal reveal-d1 text-base sm:text-lg leading-relaxed text-ink-2 max-w-xl">
-              Ten production-grade security checks. A 0&ndash;100 score. A
-              downloadable PDF. In under 30 seconds &mdash; from someone who&apos;s
-              watched these fail from inside the bank.
+              Thirty production-grade checks across headers, RLS, supply chain,
+              CI, and secrets. A weighted 0&ndash;100 score with severity-graded
+              findings. A downloadable PDF. In under 30 seconds &mdash; from
+              someone who&apos;s watched these fail from inside the bank.
             </p>
 
             <div className="reveal reveal-d2 flex flex-col sm:flex-row gap-3 mt-8 sm:mt-10">
@@ -121,7 +122,7 @@ export function Hero() {
 
             {/* Trust strip */}
             <div className="reveal reveal-d3 mt-12 sm:mt-14 pt-6 sm:pt-7 border-t border-line grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-4">
-              <TrustStat k="Checks" v="10" />
+              <TrustStat k="Checks" v="30" />
               <TrustStat k="Runtime" v="~30s" />
               <TrustStat k="Output" v="PDF + JSON" />
               <TrustStat k="Sign-up" v="None" />

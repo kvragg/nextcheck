@@ -53,17 +53,82 @@ export function HowItWorks() {
   );
 }
 
-const CHECK_ITEMS = [
-  { Icon: ShieldCheck, name: "Content-Security-Policy header", cat: "Next.js" },
-  { Icon: Lock, name: "Strict-Transport-Security header", cat: "Next.js" },
-  { Icon: ScrollText, name: ".env files in .gitignore", cat: "Hygiene" },
-  { Icon: Cpu, name: "No console.log in app/", cat: "Code quality" },
-  { Icon: AlertTriangle, name: "No dangerouslySetInnerHTML usage", cat: "React" },
-  { Icon: Database, name: "RLS enabled in migrations", cat: "Supabase" },
-  { Icon: ShieldCheck, name: "SECURITY DEFINER + REVOKE EXECUTE", cat: "Supabase" },
-  { Icon: GitBranch, name: "Dependabot configured", cat: "Supply chain" },
-  { Icon: Workflow, name: "CI workflow present", cat: "DevOps" },
-  { Icon: Pin, name: "No wildcard versions in package.json", cat: "Supply chain" },
+const COVERAGE_CATEGORIES = [
+  {
+    name: "Next.js Headers",
+    Icon: Lock,
+    severity: "9 checks · CRITICAL → LOW",
+    items: [
+      "Content-Security-Policy header",
+      "CSP quality (no unsafe-inline/eval/wildcard)",
+      "Strict-Transport-Security header",
+      "HSTS quality (max-age ≥ 1y, includeSubDomains, preload)",
+      "X-Content-Type-Options: nosniff",
+      "X-Frame-Options or frame-ancestors",
+      "Referrer-Policy strict",
+      "Permissions-Policy restrictive",
+      "X-Powered-By disabled",
+    ],
+  },
+  {
+    name: "React & Code Quality",
+    Icon: Cpu,
+    severity: "6 checks · CRITICAL → LOW",
+    items: [
+      ".env files in .gitignore",
+      "No console.log in app/",
+      "No dangerouslySetInnerHTML",
+      "No eval() / new Function()",
+      "target=_blank with rel=noopener noreferrer",
+      "No tokens/secrets in localStorage",
+    ],
+  },
+  {
+    name: "Supabase & RLS",
+    Icon: Database,
+    severity: "6 checks · CRITICAL → MEDIUM",
+    items: [
+      "RLS enabled on user-facing tables",
+      "RLS policies exist (not just ENABLE)",
+      "No permissive policies (USING true / role='authenticated')",
+      "SECURITY DEFINER + REVOKE EXECUTE",
+      "SECURITY DEFINER + explicit search_path",
+      "service_role key not in client code",
+    ],
+  },
+  {
+    name: "Supply Chain",
+    Icon: Pin,
+    severity: "4 checks · HIGH → MEDIUM",
+    items: [
+      "No wildcard versions in package.json",
+      "Lockfile committed (pnpm/npm/yarn/bun)",
+      "node_modules in .gitignore",
+      "No suspicious postinstall scripts",
+    ],
+  },
+  {
+    name: "CI / DevOps",
+    Icon: Workflow,
+    severity: "4 checks · MEDIUM → LOW",
+    items: [
+      "Dependabot or Renovate configured",
+      "CI workflow present",
+      "GitHub Actions pinned by SHA",
+      "SECURITY.md disclosure policy",
+    ],
+  },
+  {
+    name: "Secrets & Docs",
+    Icon: ShieldCheck,
+    severity: "4 checks · CRITICAL → INFO",
+    items: [
+      "NEXT_PUBLIC_ vars don't contain secrets",
+      ".env.example with placeholders only",
+      "LICENSE file present",
+      "README with basic structure",
+    ],
+  },
 ];
 
 export function Coverage() {
@@ -72,26 +137,41 @@ export function Coverage() {
     <section id="coverage" className="py-20 sm:py-24 lg:py-32 border-t border-line">
       <Container>
         <div className="reveal max-w-2xl mb-10 sm:mb-14 lg:mb-16">
-          <Eyebrow>Coverage</Eyebrow>
+          <Eyebrow>Coverage · 33 checks</Eyebrow>
           <h2 className="text-h2 font-medium mt-3 text-balance">
-            Ten checks I actually run
-            <span className="text-muted"> against my own SaaS work.</span>
+            Every check I actually run
+            <span className="text-muted"> against my own SaaS work — exposed.</span>
           </h2>
+          <p className="mt-4 sm:mt-5 text-ink-2 text-base sm:text-lg max-w-xl">
+            Each finding has a severity weight (CRITICAL → INFO). Each result tells
+            you <em>why it matters</em> and <em>how to fix it</em>. No false-positive
+            spam from a heavy SAST tool.
+          </p>
         </div>
 
         <div className="grid sm:grid-cols-2 3xl:grid-cols-3 gap-px bg-line border border-line">
-          {CHECK_ITEMS.map((c, i) => (
+          {COVERAGE_CATEGORIES.map((c, i) => (
             <div
               key={c.name}
-              className={`reveal reveal-d${(i % 4) + 1} bg-bg p-4 sm:p-5 flex items-start gap-3 sm:gap-4`}
+              className={`reveal reveal-d${(i % 4) + 1} bg-bg p-5 sm:p-6 flex flex-col gap-3`}
             >
-              <c.Icon className="w-5 h-5 shrink-0 text-green mt-0.5" aria-hidden />
-              <div className="flex-1 min-w-0">
-                <div className="text-sm sm:text-[15px] font-medium leading-snug">{c.name}</div>
-                <div className="mono text-[10px] sm:text-[10.5px] uppercase tracking-[0.16em] text-muted mt-1">
-                  {c.cat}
+              <div className="flex items-center gap-3">
+                <c.Icon className="w-5 h-5 shrink-0 text-green" aria-hidden />
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm sm:text-[15px] font-medium">{c.name}</div>
+                  <div className="mono text-[10px] sm:text-[10.5px] uppercase tracking-[0.16em] text-muted mt-0.5">
+                    {c.severity}
+                  </div>
                 </div>
               </div>
+              <ul className="text-[13px] text-ink-2 space-y-1 leading-relaxed">
+                {c.items.map((item) => (
+                  <li key={item} className="flex gap-2">
+                    <span className="text-muted shrink-0">·</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
