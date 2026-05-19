@@ -14,7 +14,7 @@
     "@octokit/rest": "^21.1.0",
     "@react-pdf/renderer": "^4.1.6",
     "@supabase/supabase-js": "^2.47.10",
-    "framer-motion": "^12.38.0",
+    "framer-motion": "^12.39.0",
     "geist": "^1.7.0",
     "lucide-react": "^1.16.0",
     "next": "16.2.6",
