@@ -29,8 +29,8 @@ export default {
         mono: ["var(--font-geist-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       fontSize: {
-        display: ["clamp(40px, 7vw, 132px)", { lineHeight: "0.95", letterSpacing: "-0.04em" }],
-        h2: ["clamp(28px, 4vw, 60px)", { lineHeight: "1.08", letterSpacing: "-0.025em" }],
+        display: ["clamp(38px, 4.5vw, 80px)", { lineHeight: "0.95", letterSpacing: "-0.04em" }],
+        h2: ["clamp(26px, 3vw, 50px)", { lineHeight: "1.1", letterSpacing: "-0.025em" }],
       },
       screens: {
         xs: "400px",

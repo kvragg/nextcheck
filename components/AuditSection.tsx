@@ -76,7 +76,7 @@ export function AuditSection() {
           </h2>
         </div>
 
-        <div className="reveal reveal-d1 max-w-3xl">
+        <div className="reveal reveal-d1 max-w-3xl xl:max-w-4xl">
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-8 sm:mb-10">
             <input
               type="url"

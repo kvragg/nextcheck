@@ -129,8 +129,8 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right: animated mock — hidden on mobile (too cramped), shown md+ */}
-          <div className="reveal reveal-d2 relative hidden md:block">
+          {/* Right: animated mock — hidden until lg (matches 2-col grid breakpoint) */}
+          <div className="reveal reveal-d2 relative hidden lg:block">
             <AuditPreview />
             <div
               className="mono absolute -top-3 -right-2 px-3.5 py-2 rounded-full bg-bg/90 text-gold border text-[10.5px] tracking-[0.12em] uppercase flex items-center gap-2"

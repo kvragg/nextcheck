@@ -54,12 +54,32 @@ body {
   }
 }
 
-/* TV / very large screens (1920+) */
+/* Responsive container — used by primitives.tsx */
+.nc-container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-inline: clamp(20px, 5vw, 72px);
+}
+@media (min-width: 1920px) {
+  .nc-container { max-width: 1440px; }
+}
+@media (min-width: 2560px) {
+  .nc-container { max-width: 1600px; }
+}
+@media (min-width: 3840px) {
+  .nc-container { max-width: 1920px; }
+}
+
+/* TV / very large screens */
 @media (min-width: 1920px) {
   html { font-size: 17px; }
 }
 @media (min-width: 2560px) {
   html { font-size: 18px; }
+}
+@media (min-width: 3840px) {
+  html { font-size: 20px; }
 }
 
 ::selection {

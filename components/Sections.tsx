@@ -149,7 +149,7 @@ export function Coverage() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 3xl:grid-cols-3 gap-px bg-line border border-line">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-line border border-line">
           {COVERAGE_CATEGORIES.map((c, i) => (
             <div
               key={c.name}
